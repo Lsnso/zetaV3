@@ -23,7 +23,7 @@ def logic(pv, dv, count, decision):
     return result
 
 def to_file(pv, dv, count, decision, expected_value):
-    dictionary = {"H":"hit", "S":"stand", "D":"double", "P":"pair"}
+    dictionary = {"H":"hit", "S":"stand", "D":"double", "P":"split"}
     with open(f"./results/{dictionary[decision]}/{count}.csv", "r") as f:
         table = list(csv.reader(f))
     j = table[0].index(dv)
