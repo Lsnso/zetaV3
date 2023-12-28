@@ -1,7 +1,7 @@
 from multiprocessing import Process
 from main import main
 
-pv = "20"
+pv = "AA"
 for decision in ["H", "S", "D"]:
     for count in range(-5,6):
         process_list = []

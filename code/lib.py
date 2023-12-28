@@ -64,19 +64,25 @@ class Hand():
 
     def update_value(self):
         #updates hand value. pushes aces to the end of the list and later decides their value
-        self.value = 0
+        self.value, self.soft_checker = 0, 0
         sorted_hand = sorted(self.cards, key=lambda x: x == 'A')
         for card in sorted_hand:
             if card in ["9", "8", "7", "6", "5", "4", "3", "2"]:
                 self.value += int(card)
+                self.soft_checker += int(card)
             elif card in ["K", "Q", "J", "T"]:
                 self.value += 10
+                self.soft_checker += 10
             elif card == "A" and self.value < 11:
                 self.value += 11
-                self.soft = True
+                self.soft_checker += 1
             elif card == "A" and self.value >= 11:
                 self.value += 1
-                self.soft = False
+                self.soft_checker += 1
+        if self.soft_checker < 11 and "A" in self.cards:
+            self.soft = True
+        else:
+            self.soft = False
 
 class Game():
     def __init__(self, player_info, dealer_info, deck_info, decision):
@@ -176,7 +182,10 @@ class Game():
 
     def read_decision(self):
         #opens deck count table file and returns a decision
-        with open(f"./tables/{self.deck.count}.csv", "r") as f:
+        if self.deck.count > 5: count = 5
+        elif self.deck.count < 5: count = -5
+        else: count = self.deck.count
+        with open(f"./tables/{count}.csv", "r") as f:
             table = list(csv.reader(f))
 
         table_j = table[0].index(self.dealer.cards[0])
@@ -203,8 +212,11 @@ class Game():
             self.stand()
         elif self.decision == "D":
             self.double()
+        elif self.decision == "P":
+            self.hit()
         else:
             print("Missing decision")
+            print(self.player.cards)
             self.on = False
 
     def hit(self):
