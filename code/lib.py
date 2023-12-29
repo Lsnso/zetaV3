@@ -66,6 +66,7 @@ class Hand():
         #updates hand value. pushes aces to the end of the list and later decides their value
         self.value, self.soft_checker = 0, 0
         sorted_hand = sorted(self.cards, key=lambda x: x == 'A')
+        position = 0
         for card in sorted_hand:
             if card in ["9", "8", "7", "6", "5", "4", "3", "2"]:
                 self.value += int(card)
@@ -73,12 +74,13 @@ class Hand():
             elif card in ["K", "Q", "J", "T"]:
                 self.value += 10
                 self.soft_checker += 10
-            elif card == "A" and self.value < 11:
+            elif card == "A" and self.value < 11 and position == len(sorted_hand)-1:
                 self.value += 11
                 self.soft_checker += 1
-            elif card == "A" and self.value >= 11:
+            elif card == "A":
                 self.value += 1
                 self.soft_checker += 1
+            position += 1
         if self.soft_checker < 11 and "A" in self.cards:
             self.soft = True
         else:
@@ -102,6 +104,7 @@ class Game():
             "TT" : [["T"], ["Q"], ["J"], ["K"]],
 
             #soft combinations
+            #"AA" : [["A", "A"]],
             "A2" : [["A", "2"], ["2", "A"]],
             "A3" : [["A", "3"], ["3", "A"]],
             "A4" : [["A", "4"], ["4", "A"]],
@@ -212,8 +215,10 @@ class Game():
             self.stand()
         elif self.decision == "D":
             self.double()
-        elif self.decision == "P":
+        elif self.decision == "P" and self.player.cards != ["A"]:
             self.hit()
+        elif self.decision == "P" and self.player.cards == ["A"]:
+            self.double()
         else:
             print("Missing decision")
             print(self.player.cards)

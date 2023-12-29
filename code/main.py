@@ -49,5 +49,5 @@ def main(pv, dv, count, decision):
         elif result == 0: draws += result
         elif result < 0: losses -= result
     expected_value = (1 * wins/total) + (0 * draws/total) + (-1 * losses/total)
-    #to_file(pv, dv, count, decision, expected_value)
+    to_file(pv, dv, count, decision, expected_value)
     print(f"Finished {pv} vs. {dv} at {count} with {decision}")
